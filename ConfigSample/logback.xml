@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<configuration debug="true">
+
+  <property name="ROOT_DIR" value="/data/data/"/>
+
+  <!-- Create a logcat appender -->
+  <appender name="LOGCAT" class="ch.qos.logback.classic.android.LogcatAppender">
+    <encoder>
+      <pattern>%msg</pattern>
+    </encoder>
+  </appender>
+
+  <appender name="FILE-PACKAGE" class="ch.qos.logback.classic.sift.SiftingAppender">
+    <discriminator>
+      <key>discriminator</key>
+      <defaultValue>unknown</defaultValue>
+    </discriminator>
+
+    <sift>
+      <appender name="FILE-TIME-${discriminator}" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${ROOT_DIR}/${discriminator}/logs/${discriminator}.log</file>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+          <fileNamePattern>${ROOT_DIR}/${discriminator}/logs/${discriminator}.log.%i.zip</fileNamePattern>
+          <minIndex>1</minIndex>
+          <maxIndex>3</maxIndex>
+        </rollingPolicy>
+
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+          <maxFileSize>8MB</maxFileSize>
+        </triggeringPolicy>
+
+        <encoder>
+          <pattern>%date{MM-dd HH:mm:ss.SSS} %X{PID} %X{TID} %-5level %logger{36}: %msg%n</pattern>
+        </encoder>
+      </appender>
+    </sift>
+  </appender>
+
+  <!-- Write INFO (and higher-level) messages to the log file -->
+  <root level="DEBUG">
+    <appender-ref ref="LOGCAT" />
+    <appender-ref ref="FILE-PACKAGE" />
+  </root>
+
+</configuration>

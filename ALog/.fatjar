@@ -1,0 +1,14 @@
+#Fat Jar Configuration File
+#Fri Nov 20 11:47:20 KST 2015
+onejar.license.required=true
+manifest.classpath=
+manifest.removesigners=true
+onejar.checkbox=false
+jarname=ALog.jar
+manifest.mergeall=true
+manifest.mainclass=
+manifest.file=<createnew>
+jarname.isextern=false
+onejar.expand=
+excludes=<jar|android-support-v4.jar>;<jar|annotations.jar>
+includes=

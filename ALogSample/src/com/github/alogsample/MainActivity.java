@@ -19,5 +19,11 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
         
         if (D) ALog.i(LOG, TAG, "onCreate()");
+        
+         try {
+            throw new Exception("Exception Test");
+        } catch (Exception e){
+            ALog.e(LOG, TAG, "Exception ", e);
+        }
     }
 }

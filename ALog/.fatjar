@@ -1,5 +1,5 @@
 #Fat Jar Configuration File
-#Fri Nov 20 11:47:20 KST 2015
+#Tue Mar 08 13:40:54 KST 2016
 onejar.license.required=true
 manifest.classpath=
 manifest.removesigners=true
@@ -10,5 +10,5 @@ manifest.mainclass=
 manifest.file=<createnew>
 jarname.isextern=false
 onejar.expand=
-excludes=<jar|android-support-v4.jar>;<jar|annotations.jar>
+excludes=<jar|android-support-v4.jar>
 includes=

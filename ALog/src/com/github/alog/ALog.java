@@ -6,6 +6,9 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
 import java.io.InputStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.net.UnknownHostException;
 
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
@@ -163,25 +166,50 @@ public class ALog {
     public static int v(String msg) {
         return v(mALogger, TAG, msg);
     }
+    
+    public static int v(String msg, Throwable tr) {
+        return v(mALogger, TAG, msg + '\n' + getStackTraceString(tr));
+    }
 
     public static int d(String msg) {
         return d(mALogger, TAG, msg);
+    }
+    
+    public static int d(String msg, Throwable tr) {
+        return d(mALogger, TAG, msg + '\n' + getStackTraceString(tr));
     }
 
     public static int i(String msg) {
         return i(mALogger, TAG, msg);
     }
+    
+    public static int i(String msg, Throwable tr) {
+        return i(mALogger, TAG, msg + '\n' + getStackTraceString(tr));
+    }
 
     public static int w(String msg) {
         return w(mALogger, TAG, msg);
+    }
+    
+    public static int w(String msg, Throwable tr) {
+        return w(mALogger, TAG, msg + '\n' + getStackTraceString(tr));
     }
 
     public static int e(String msg) {
         return e(mALogger, TAG, msg);
     }
     
+    public static int e(String msg, Throwable tr) {
+        return e(mALogger, TAG, msg + '\n' + getStackTraceString(tr));
+    }
+    
     public static int v(String tag, String msg) {
         println(ALogLevel.TRACE, null, tag, msg);
+        return 0;
+    }
+    
+    public static int v(String tag, String msg, Throwable tr) {
+        println(ALogLevel.TRACE, null, tag, msg + '\n' + getStackTraceString(tr));
         return 0;
     }
     
@@ -190,8 +218,18 @@ public class ALog {
         return 0;
     }
     
+    public static int d(String tag, String msg, Throwable tr) {
+        println(ALogLevel.DEBUG, null, tag, msg + '\n' + getStackTraceString(tr));
+        return 0;
+    }
+    
     public static int i(String tag, String msg) {
         println(ALogLevel.INFO, null, tag, msg);
+        return 0;
+    }
+    
+    public static int i(String tag, String msg, Throwable tr) {
+        println(ALogLevel.INFO, null, tag, msg + '\n' + getStackTraceString(tr));
         return 0;
     }
     
@@ -200,8 +238,18 @@ public class ALog {
         return 0;
     }
     
+    public static int w(String tag, String msg, Throwable tr) {
+        println(ALogLevel.WARN, null, tag, msg + '\n' + getStackTraceString(tr));
+        return 0;
+    }
+    
     public static int e(String tag, String msg) {
         println(ALogLevel.ERROR, null, tag, msg);
+        return 0;
+    }
+    
+    public static int e(String tag, String msg, Throwable tr) {
+        println(ALogLevel.ERROR, null, tag, msg + '\n' + getStackTraceString(tr));
         return 0;
     }
     
@@ -210,8 +258,18 @@ public class ALog {
         return 0;
     }
     
+    public static int v(ALogger logger, String tag, String msg, Throwable tr) {
+        println(ALogLevel.TRACE, logger, tag, msg + '\n' + getStackTraceString(tr));
+        return 0;
+    }
+    
     public static int d(ALogger logger, String tag, String msg) {
         println(ALogLevel.DEBUG, logger, tag, msg);
+        return 0;
+    }
+    
+    public static int d(ALogger logger, String tag, String msg, Throwable tr) {
+        println(ALogLevel.DEBUG, logger, tag, msg + '\n' + getStackTraceString(tr));
         return 0;
     }
     
@@ -220,14 +278,57 @@ public class ALog {
         return 0;
     }
     
+    public static int i(ALogger logger, String tag, String msg, Throwable tr) {
+        println(ALogLevel.INFO, logger, tag, msg + '\n' + getStackTraceString(tr));
+        return 0;
+    }
+    
     public static int w(ALogger logger, String tag, String msg) {
         println(ALogLevel.WARN, logger, tag, msg);
+        return 0;
+    }
+    
+    public static int w(ALogger logger, String tag, String msg, Throwable tr) {
+        println(ALogLevel.WARN, logger, tag, msg + '\n' + getStackTraceString(tr));
         return 0;
     }
     
     public static int e(ALogger logger, String tag, String msg) {
         println(ALogLevel.ERROR, logger, tag, msg);
         return 0;
+    }
+    
+    public static int e(ALogger logger, String tag, String msg, Throwable tr) {
+        println(ALogLevel.ERROR, logger, tag, msg + '\n' + getStackTraceString(tr));
+        return 0;
+    }
+    
+    /**
+     * Codes from AOSP
+     * android/util/Log.java
+     * 
+     * Handy function to get a loggable stack trace from a Throwable
+     * @param tr An exception to log
+     */
+    public static String getStackTraceString(Throwable tr) {
+        if (tr == null) {
+            return "";
+        }
+
+        // This is to reduce the amount of log spew that apps do in the non-error
+        // condition of the network being unavailable.
+        Throwable t = tr;
+        while (t != null) {
+            if (t instanceof UnknownHostException) {
+                return "";
+            }
+            t = t.getCause();
+        }
+
+        StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw);
+        tr.printStackTrace(pw);
+        return sw.toString();
     }
     
     private static ALogger getLogger(ALogger logger, String tag) {
